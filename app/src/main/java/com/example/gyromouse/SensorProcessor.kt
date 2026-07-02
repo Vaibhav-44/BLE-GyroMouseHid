@@ -35,13 +35,13 @@ class SensorProcessor(private val context: Context) : SensorEventListener {
                 override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
                     // Swipe: Send wheel or drag
                     val wheel = if (velocityY > 1000) -1 else if (velocityY < -1000) 1 else 0
-                    _mouseReports.tryEmit(HidReportBuilder.buildMouseReport(0, 0, 0, wheel))
+                    _mouseReports.tryEmit(HidReportBuilder.buildMouseReport(0, 0f, 0f, wheel))
                     return true
                 }
                 override fun onSingleTapUp(e: MotionEvent): Boolean {
                     // Tap: Left click
-                    _mouseReports.tryEmit(HidReportBuilder.buildMouseReport(1, 0, 0, 0))  // Button 1
-                    _mouseReports.tryEmit(HidReportBuilder.buildMouseReport(0, 0, 0, 0))  // Release
+                    _mouseReports.tryEmit(HidReportBuilder.buildMouseReport(1, 0f, 0f, 0))  // Button 1
+                    _mouseReports.tryEmit(HidReportBuilder.buildMouseReport(0, 0f, 0f, 0))  // Release
                     return true
                 }
                 // Add onLongPress for right-click, etc.
