@@ -13,7 +13,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
-import kotlin.math.sqrt
 
 class SensorProcessor(private val context: Context) : SensorEventListener {
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -35,13 +34,13 @@ class SensorProcessor(private val context: Context) : SensorEventListener {
                 override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
                     // Swipe: Send wheel or drag
                     val wheel = if (velocityY > 1000) -1 else if (velocityY < -1000) 1 else 0
-                    _mouseReports.tryEmit(HidReportBuilder.buildMouseReport(0, 0, 0, wheel))
+                    _mouseReports.tryEmit(HidReportBuilder.buildMouseReport(0, 0f, 0f, wheel))
                     return true
                 }
                 override fun onSingleTapUp(e: MotionEvent): Boolean {
                     // Tap: Left click
-                    _mouseReports.tryEmit(HidReportBuilder.buildMouseReport(1, 0, 0, 0))  // Button 1
-                    _mouseReports.tryEmit(HidReportBuilder.buildMouseReport(0, 0, 0, 0))  // Release
+                    _mouseReports.tryEmit(HidReportBuilder.buildMouseReport(1, 0f, 0f, 0))  // Button 1
+                    _mouseReports.tryEmit(HidReportBuilder.buildMouseReport(0, 0f, 0f, 0))  // Release
                     return true
                 }
                 // Add onLongPress for right-click, etc.
@@ -84,8 +83,8 @@ class SensorProcessor(private val context: Context) : SensorEventListener {
         // Complementary filter: angle = alpha * (angle + gyro * dt) + (1 - alpha) * accel_angle
         // dt ~ 10ms at 100Hz; simplify to deltas
         val dt = 0.01f  // Approximate
-        val accelMagnitude = sqrt(accelX*accelX + accelY*accelY + accelZ*accelZ)
-        if (accelMagnitude > 10) return  // Ignore if accelerating hard (gesture?)
+        val accelMagnitudeSquared = accelX*accelX + accelY*accelY + accelZ*accelZ
+        if (accelMagnitudeSquared > 100) return  // Ignore if accelerating hard (gesture?)
 
         // Gyro to relative movement (sensitivity tunable)
         val sensitivity = 0.5f  // Pixels per deg/s
