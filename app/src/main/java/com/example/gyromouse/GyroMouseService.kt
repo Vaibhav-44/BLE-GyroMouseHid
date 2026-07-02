@@ -21,7 +21,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 /**
@@ -164,8 +163,8 @@ class GyroMouseService : Service() {
     // -------------------------------------------------
     private fun startSendingReports() {
         CoroutineScope(Dispatchers.IO).launch {
-            sensorProcessor.mouseReports.collectLatest { report ->
-                val dev = hostDevice ?: return@collectLatest
+            sensorProcessor.mouseReports.collect { report ->
+                val dev = hostDevice ?: return@collect
                 if (hasConnectPermission()) {
                     hidDevice?.sendReport(dev, REPORT_ID_MOUSE, report)
                 }
