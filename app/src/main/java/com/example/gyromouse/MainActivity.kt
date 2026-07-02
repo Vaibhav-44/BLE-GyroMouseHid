@@ -2,6 +2,7 @@ package com.example.gyromouse
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.Manifest
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity

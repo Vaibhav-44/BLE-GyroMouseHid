@@ -164,9 +164,10 @@ class GyroMouseService : Service() {
     // -------------------------------------------------
     private fun startSendingReports() {
         CoroutineScope(Dispatchers.IO).launch {
+            val hasPerm = hasConnectPermission()
             sensorProcessor.mouseReports.collectLatest { report ->
                 val dev = hostDevice ?: return@collectLatest
-                if (hasConnectPermission()) {
+                if (hasPerm) {
                     hidDevice?.sendReport(dev, REPORT_ID_MOUSE, report)
                 }
             }
