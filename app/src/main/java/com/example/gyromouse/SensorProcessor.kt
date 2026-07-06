@@ -13,7 +13,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
-import kotlin.math.sqrt
 
 class SensorProcessor(private val context: Context) : SensorEventListener {
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -84,8 +83,8 @@ class SensorProcessor(private val context: Context) : SensorEventListener {
         // Complementary filter: angle = alpha * (angle + gyro * dt) + (1 - alpha) * accel_angle
         // dt ~ 10ms at 100Hz; simplify to deltas
         val dt = 0.01f  // Approximate
-        val accelMagnitude = sqrt(accelX*accelX + accelY*accelY + accelZ*accelZ)
-        if (accelMagnitude > 10) return  // Ignore if accelerating hard (gesture?)
+        val accelMagnitudeSquared = accelX*accelX + accelY*accelY + accelZ*accelZ
+        if (accelMagnitudeSquared > 100) return  // Ignore if accelerating hard (gesture?)
 
         // Gyro to relative movement (sensitivity tunable)
         val sensitivity = 0.5f  // Pixels per deg/s

@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
                                 else startForegroundService(serviceIntent)
                                 isRunning = !isRunning
                             },
-                            enabled = ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
+                            enabled = ContextCompat.checkSelfPermission(this@MainActivity, android.Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
                         ) {
                             Text(if (isRunning) "Stop Mouse" else "Start Mouse")
                         }
@@ -61,9 +61,9 @@ class MainActivity : ComponentActivity() {
 
     private fun checkPermissions() {
         val perms = if (Build.VERSION.SDK_INT >= 31) {
-            arrayOf(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN)
+            arrayOf(android.Manifest.permission.BLUETOOTH_CONNECT, android.Manifest.permission.BLUETOOTH_SCAN)
         } else {
-            arrayOf(Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN)
+            arrayOf(android.Manifest.permission.BLUETOOTH, android.Manifest.permission.BLUETOOTH_ADMIN)
         }
         requestPermissionLauncher.launch(perms)
     }
